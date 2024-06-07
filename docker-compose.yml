@@ -1,0 +1,12 @@
+version: '3'
+services:
+  ollama-web:
+    demo-app:
+      build: .
+      volument:
+        - dockervenv:/src/.venv
+        - .:/src
+      ports:
+        - "0800:0800"
+      environment:
+        - WATCHFILES_FORCE_POLLING=true
