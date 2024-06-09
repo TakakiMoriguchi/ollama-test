@@ -1,7 +1,7 @@
 version: '3'
 services:
   ollama-app:
-    build: .
+    build: ./api
     volumes:
       - .dockervenv:/src/.venv
       - .:/src
@@ -9,3 +9,31 @@ services:
       - "8800:8000"
     environment:
       - WATCHFILES_FORCE_POLLING=true
+    depends_on:
+      - ollama
+    networks:
+      - ollama-docker
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - 11434:11434
+    volumes:
+      - .:/code
+      - ./ollama/ollama:/root/.ollama
+      - ./start-ollama.sh:/start-ollama.sh
+    container_name: ollama
+    restart: always
+    networks:
+      - ollama-docker
+    healthcheck:
+      test: [ "CMD", "pgrep", "-f", "ollama" ]
+      interval: 30s
+      retries: 10
+      start_period: 120s
+      timeout: 10s
+    entrypoint: /bin/sh
+    command: /start-ollama.sh
+
+networks:
+  ollama-docker:
+    external: false
