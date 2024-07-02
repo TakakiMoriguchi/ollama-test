@@ -22,7 +22,7 @@ services:
       - ./ollama/ollama:/root/.ollama
       - ./start-ollama.sh:/start-ollama.sh
     container_name: ollama
-    restart: always
+    restart: no
     networks:
       - ollama-docker
     healthcheck:
